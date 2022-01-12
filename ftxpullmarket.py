@@ -17,8 +17,8 @@ class FtxClient:
         self._api_secret = api_secret
         self._subaccount_name = subaccount_name
 
-    def _get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
-        return self._request('GET', path, params=params)
+    def _get(self, path: str, private_data=True, params: Optional[Dict[str, Any]] = None) -> Any:
+        return self._request('GET', path, private_data, params=params)
 
     def _post(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         return self._request('POST', path, json=params)
@@ -26,9 +26,10 @@ class FtxClient:
     def _delete(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         return self._request('DELETE', path, json=params)
 
-    def _request(self, method: str, path: str, **kwargs) -> Any:
+    def _request(self, method: str, path: str, private_data=True, **kwargs) -> Any:
         request = Request(method, self._ENDPOINT + path, **kwargs)
-        self._sign_request(request)
+        if private_data:
+            self._sign_request(request)
         response = self._session.send(request.prepare())
         return self._process_response(response)
 
@@ -57,13 +58,13 @@ class FtxClient:
             return data['result']
 
     def list_futures(self) -> List[dict]:
-        return self._get('futures')
+        return self._get('futures', private_data=False)
 
     def list_markets(self) -> List[dict]:
-        return self._get('markets')
+        return self._get('markets', private_data=False)
 
     def get_orderbook(self, market: str, depth: int = None) -> dict:
-        return self._get(f'markets/{market}/orderbook', {'depth': depth})
+        return self._get(f'markets/{market}/orderbook', private_data=False, params={'depth': depth})
 
     def get_trades(self, market: str) -> dict:
         return self._get(f'markets/{market}/trades')
@@ -180,3 +181,6 @@ class FtxClient:
                 break
         return results
 
+if __name__ == "__main__":
+    # TODO: put your code here
+    pass
