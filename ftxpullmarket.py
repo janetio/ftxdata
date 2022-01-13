@@ -182,5 +182,7 @@ class FtxClient:
         return results
 
 if __name__ == "__main__":
-    # TODO: put your code here
+    markets=FtxClient()
+    for i in range(len(markets.list_markets())):
+        print(markets.list_markets()[i]['name'])
     pass
