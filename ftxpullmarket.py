@@ -60,8 +60,11 @@ class FtxClient:
     def list_futures(self) -> List[dict]:
         return self._get('futures', private_data=False)
 
-    def list_markets(self) -> List[dict]:
+    def list_futures(self) -> List[dict]:
         return self._get('markets', private_data=False)
+
+    def list_markets(self) -> List[dict]:
+        return self._get('futures', private_data=False)
 
     def get_orderbook(self, market: str, depth: int = None) -> dict:
         return self._get(f'markets/{market}/orderbook', private_data=False, params={'depth': depth})
@@ -181,6 +184,10 @@ class FtxClient:
                 break
         return results
 
+    def get_price(self):
+        print("here")
+        return self._get('markets/BTC-PERP/candles', params={'market_name': 'ETH/USD', 'resolution': 86400}, private_data=False)
+
 if __name__ == "__main__":
-    # TODO: put your code here
-    pass
+    client = FtxClient()
+    print(client.list_futures())
