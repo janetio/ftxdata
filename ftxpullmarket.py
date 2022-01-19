@@ -189,5 +189,7 @@ class FtxClient:
         return self._get('markets/BTC-PERP/candles', params={'market_name': 'ETH/USD', 'resolution': 86400}, private_data=False)
 
 if __name__ == "__main__":
-    client = FtxClient()
-    print(client.list_futures())
+    markets=FtxClient()
+    for i in range(len(markets.list_markets())):
+        print(markets.list_markets()[i]['name'])
+    pass
